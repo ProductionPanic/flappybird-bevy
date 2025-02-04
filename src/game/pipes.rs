@@ -1,7 +1,8 @@
 use crate::game::base::BASE_HEIGHT;
 use crate::game::bird::{Bird, BIRD_WIDTH};
+use crate::game::score::Score;
 use crate::game::systems::game_is_running;
-use crate::game::{GameItem, Score, SimulationState};
+use crate::game::{GameItem, SimulationState};
 use crate::SCREEN_WIDTH;
 use bevy::audio::PlaybackMode;
 use bevy::prelude::*;

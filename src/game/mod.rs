@@ -2,12 +2,14 @@ mod base;
 mod bg;
 mod bird;
 mod pipes;
+mod score;
 mod systems;
 
 use crate::game::bg::BackgroundPlugin;
 use crate::game::bird::BirdPlugin;
 use crate::game::pipes::PipesPlugin;
-use crate::game::systems::{setup, update_score};
+use crate::game::score::{Score, ScorePlugin};
+use crate::game::systems::setup;
 use crate::AppState;
 use bevy::audio::PlaybackMode;
 use bevy::prelude::*;
@@ -19,13 +21,12 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<SimulationState>()
             .init_resource::<GameOver>()
-            .init_resource::<Score>()
+            .add_plugins(ScorePlugin)
             .add_plugins(BirdPlugin)
             .add_plugins(PipesPlugin)
             .add_plugins(BackgroundPlugin)
             .add_plugins(base::BasePlugin)
             .add_systems(Startup, setup)
-            .add_systems(Update, update_score)
             .add_systems(OnEnter(SimulationState::GameOver), show_game_over)
             .add_systems(Update, (update_game_over).run_if(is_game_over))
             .add_systems(OnEnter(SimulationState::Running), start_sound)
@@ -50,15 +51,6 @@ pub struct GameOver(pub bool);
 impl Default for GameOver {
     fn default() -> GameOver {
         GameOver(false)
-    }
-}
-
-#[derive(Resource)]
-pub struct Score(pub u32);
-
-impl Default for Score {
-    fn default() -> Score {
-        Score(0)
     }
 }
 

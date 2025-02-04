@@ -1,15 +1,9 @@
-use crate::game::{Score, SimulationState};
+use crate::game::SimulationState;
 use crate::AppState;
 use bevy::prelude::*;
 
 pub fn setup(mut commands: Commands) {
     commands.spawn(Camera2d);
-}
-
-pub fn update_score(state: Res<Score>) {
-    if state.is_changed() {
-        println!("Score: {}", state.0);
-    }
 }
 
 pub fn game_is_running(
