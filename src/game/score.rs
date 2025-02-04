@@ -45,7 +45,7 @@ pub fn update_score(
         }
 
         let score = score.0;
-        let mut score_str = score.to_string();
+        let score_str = score.to_string();
         let amount_of_chars = score_str.len() - 1;
 
         let mut x = -CHAR_WIDTH * amount_of_chars as f32 / 2.;
