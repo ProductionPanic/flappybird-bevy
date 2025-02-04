@@ -1,7 +1,7 @@
 use crate::game::base::BASE_HEIGHT;
 use crate::game::bird::{Bird, BIRD_WIDTH};
 use crate::game::systems::game_is_running;
-use crate::game::{GameItem, GameOver, Score, SimulationState};
+use crate::game::{GameItem, Score, SimulationState};
 use crate::SCREEN_WIDTH;
 use bevy::audio::PlaybackMode;
 use bevy::prelude::*;
@@ -49,53 +49,46 @@ impl Default for PipeSpawnTimer {
     }
 }
 
-fn random_between<'a>(min: f32, max: f32) -> impl FnMut() -> f32 + 'a {
-    move || min + (max - min) * rand::random::<f32>()
-}
-
 pub fn update_pipes(
-    mut timer: ResMut<PipeSpawnTimer>,
+    timer: Res<PipeSpawnTimer>,
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    game_over: Res<GameOver>,
 ) {
-    if !game_over.0 {
-        if timer.timer.just_finished() {
-            let min_offset = -BASE_HEIGHT;
-            let max_offset = BASE_HEIGHT + 40.;
+    if timer.timer.just_finished() {
+        let min_offset = -BASE_HEIGHT;
+        let max_offset = BASE_HEIGHT + 40.;
 
-            let offset = rand::thread_rng().gen_range(min_offset..max_offset);
+        let offset = rand::thread_rng().gen_range(min_offset..max_offset);
 
-            commands.spawn((
-                Pipe { past_bird: false },
-                Sprite {
-                    image: asset_server.load("sprites/pipe-green.png"),
-                    ..default()
-                },
-                GameItem {},
-                Transform::from_xyz(
-                    SCREEN_WIDTH / 2. + PIPE_WIDTH / 2.,
-                    -PIPE_HEIGHT / 2. - PIPE_SPACING / 2. + offset,
-                    -1.2,
-                ),
-                GlobalTransform::default(),
-            ));
-            commands.spawn((
-                Pipe { past_bird: false },
-                Sprite {
-                    image: asset_server.load("sprites/pipe-green.png"),
-                    flip_y: true,
-                    ..default()
-                },
-                GameItem {},
-                Transform::from_xyz(
-                    SCREEN_WIDTH / 2. + PIPE_WIDTH / 2.,
-                    PIPE_HEIGHT / 2. + PIPE_SPACING / 2. + offset,
-                    -1.2,
-                ),
-                GlobalTransform::default(),
-            ));
-        }
+        commands.spawn((
+            Pipe { past_bird: false },
+            Sprite {
+                image: asset_server.load("sprites/pipe-green.png"),
+                ..default()
+            },
+            GameItem {},
+            Transform::from_xyz(
+                SCREEN_WIDTH / 2. + PIPE_WIDTH / 2.,
+                -PIPE_HEIGHT / 2. - PIPE_SPACING / 2. + offset,
+                -1.2,
+            ),
+            GlobalTransform::default(),
+        ));
+        commands.spawn((
+            Pipe { past_bird: false },
+            Sprite {
+                image: asset_server.load("sprites/pipe-green.png"),
+                flip_y: true,
+                ..default()
+            },
+            GameItem {},
+            Transform::from_xyz(
+                SCREEN_WIDTH / 2. + PIPE_WIDTH / 2.,
+                PIPE_HEIGHT / 2. + PIPE_SPACING / 2. + offset,
+                -1.2,
+            ),
+            GlobalTransform::default(),
+        ));
     }
 }
 
@@ -103,15 +96,12 @@ pub fn move_pipes(
     mut query: Query<(&mut Transform, Entity), With<Pipe>>,
     mut commands: Commands,
     time: Res<Time>,
-    game_over: Res<GameOver>,
 ) {
-    if !game_over.0 {
-        for (mut transform, entity) in query.iter_mut() {
-            transform.translation.x -= PIPE_SPEED * time.delta_secs();
+    for (mut transform, entity) in query.iter_mut() {
+        transform.translation.x -= PIPE_SPEED * time.delta_secs();
 
-            if transform.translation.x < (SCREEN_WIDTH / 2. + PIPE_WIDTH / 2.) * -1. {
-                commands.entity(entity).despawn();
-            }
+        if transform.translation.x < (SCREEN_WIDTH / 2. + PIPE_WIDTH / 2.) * -1. {
+            commands.entity(entity).despawn();
         }
     }
 }
@@ -151,8 +141,8 @@ pub fn check_past_bird(
 
 pub fn bird_hit_pipe(
     mut commands: Commands,
-    bird_query: Query<(&Transform), With<Bird>>,
-    pipe_query: Query<(&Transform), With<Pipe>>,
+    bird_query: Query<&Transform, With<Bird>>,
+    pipe_query: Query<&Transform, With<Pipe>>,
 ) {
     for bird_transform in bird_query.iter() {
         let bird_min_x = bird_transform.translation.x - BIRD_WIDTH / 3.;

@@ -4,7 +4,6 @@ use bevy::prelude::*;
 use rand::random;
 
 pub const BG_WIDTH: f32 = 288.;
-pub const BG_HEIGHT: f32 = 512.;
 
 pub struct BackgroundPlugin;
 

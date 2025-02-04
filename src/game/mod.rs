@@ -25,7 +25,7 @@ impl Plugin for GamePlugin {
             .add_plugins(BackgroundPlugin)
             .add_plugins(base::BasePlugin)
             .add_systems(Startup, setup)
-            .add_systems(Update, (update_score))
+            .add_systems(Update, update_score)
             .add_systems(OnEnter(SimulationState::GameOver), show_game_over)
             .add_systems(Update, (update_game_over).run_if(is_game_over))
             .add_systems(OnEnter(SimulationState::Running), start_sound)

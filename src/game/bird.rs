@@ -15,7 +15,7 @@ pub struct BirdPlugin;
 
 impl Plugin for BirdPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(AppState::Game), (setup_bird))
+        app.add_systems(OnEnter(AppState::Game), setup_bird)
             .add_systems(
                 Update,
                 (
@@ -69,12 +69,8 @@ pub fn setup_bird(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 }
 
-pub fn update_bird(
-    time: Res<Time>,
-    mut query: Query<(&mut Bird, &mut Transform, &mut Sprite)>,
-    asset_server: Res<AssetServer>,
-) {
-    for (mut bird, mut transform, mut sprite) in query.iter_mut() {
+pub fn update_bird(time: Res<Time>, mut query: Query<(&mut Bird, &mut Transform)>) {
+    for (mut bird, mut transform) in query.iter_mut() {
         bird.velocity += BIRD_GRAVITY * time.delta_secs();
         transform.translation.y += bird.velocity;
 
@@ -110,10 +106,10 @@ pub fn flap(
     }
 }
 
-pub fn confine_bird(mut query: Query<(&mut Bird, &mut Transform)>, mut commands: Commands) {
+pub fn confine_bird(mut query: Query<&mut Transform, With<Bird>>, mut commands: Commands) {
     let height = 256. - BIRD_HEIGHT / 2. - BASE_HEIGHT / 2.;
 
-    for (mut bird, mut transform) in query.iter_mut() {
+    for mut transform in query.iter_mut() {
         if transform.translation.y < -height {
             transform.translation.y = -height;
             commands.set_state(SimulationState::GameOver);
