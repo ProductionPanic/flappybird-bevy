@@ -1,4 +1,5 @@
 use crate::game::systems::game_is_running;
+use crate::game::SimulationState;
 use crate::{AppState, SCREEN_HEIGHT};
 use bevy::prelude::*;
 
@@ -10,6 +11,7 @@ impl Plugin for ScorePlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<Score>()
             .add_systems(OnExit(AppState::Game), cleanup_score)
+            .add_systems(OnExit(SimulationState::Running), cleanup_score)
             .add_systems(Update, update_score.run_if(game_is_running));
     }
 }
@@ -70,7 +72,7 @@ pub fn update_score(
                     image: asset_server.load(sprite),
                     ..default()
                 },
-                Transform::from_xyz(x, SCREEN_HEIGHT / 2. - 36.0, 1.),
+                Transform::from_xyz(x, SCREEN_HEIGHT / 2. - 56.0, 1.),
                 ScoreText {},
             ));
             x += CHAR_WIDTH;

@@ -1,4 +1,4 @@
-use crate::game::pipes::PIPE_SPEED;
+use crate::game::GAME_SPEED;
 use crate::AppState;
 use bevy::prelude::*;
 use rand::random;
@@ -45,7 +45,7 @@ pub fn confine_bg(mut query: Query<(&Background, &mut Transform)>) {
 
 pub fn move_bg(time: Res<Time>, mut query: Query<(&Background, &mut Transform)>) {
     for (_, mut transform) in query.iter_mut() {
-        transform.translation.x -= (PIPE_SPEED / 2.) * time.delta_secs();
+        transform.translation.x -= (GAME_SPEED / 2.) * time.delta_secs();
     }
 }
 

@@ -2,7 +2,7 @@ use crate::game::base::BASE_HEIGHT;
 use crate::game::bird::{Bird, BIRD_WIDTH};
 use crate::game::score::Score;
 use crate::game::systems::game_is_running;
-use crate::game::{GameItem, SimulationState};
+use crate::game::{GameItem, SimulationState, GAME_SPEED};
 use crate::SCREEN_WIDTH;
 use bevy::audio::PlaybackMode;
 use bevy::prelude::*;
@@ -12,7 +12,6 @@ pub const PIPE_WIDTH: f32 = 52.;
 pub const PIPE_HEIGHT: f32 = 320.;
 pub const PIPE_SPACING: f32 = 100.;
 pub const PIPE_SPAWN_DELAY: f32 = 3.;
-pub const PIPE_SPEED: f32 = 50.;
 
 pub struct PipesPlugin;
 
@@ -99,7 +98,7 @@ pub fn move_pipes(
     time: Res<Time>,
 ) {
     for (mut transform, entity) in query.iter_mut() {
-        transform.translation.x -= PIPE_SPEED * time.delta_secs();
+        transform.translation.x -= GAME_SPEED * time.delta_secs();
 
         if transform.translation.x < (SCREEN_WIDTH / 2. + PIPE_WIDTH / 2.) * -1. {
             commands.entity(entity).despawn();

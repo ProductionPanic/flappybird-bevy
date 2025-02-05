@@ -15,6 +15,8 @@ use bevy::audio::PlaybackMode;
 use bevy::prelude::*;
 use bevy::prelude::{default, Resource};
 
+pub const GAME_SPEED: f32 = 50.;
+
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {

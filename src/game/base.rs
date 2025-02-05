@@ -1,4 +1,4 @@
-use crate::game::pipes::PIPE_SPEED;
+use crate::game::GAME_SPEED;
 use crate::AppState;
 use bevy::prelude::*;
 
@@ -42,7 +42,7 @@ pub fn confine_bases(mut query: Query<(&Base, &mut Transform)>) {
 
 pub fn move_bases(time: Res<Time>, mut query: Query<(&Base, &mut Transform)>) {
     for (_, mut transform) in query.iter_mut() {
-        transform.translation.x -= PIPE_SPEED * time.delta_secs();
+        transform.translation.x -= GAME_SPEED * time.delta_secs();
     }
 }
 
